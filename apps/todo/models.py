@@ -4,6 +4,7 @@ from django.urls import reverse
 
 class TODOModel(models.Model):
     title = models.CharField(max_length=101)
+    is_completed = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.title}"

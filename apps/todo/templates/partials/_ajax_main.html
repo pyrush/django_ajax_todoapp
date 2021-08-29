@@ -3,15 +3,17 @@ $(document).ready(function () {
     submitBtnId = $("#submitBtn")
     taskList = $("#taskList")
     taskDeleteBtn = $("#taskDeleteBtn")
+    csrf = $("input[name=csrfmiddlewaretoken]").val()
 
+    // task create view ajax
     $(taskDeleteBtn).click(function (e) {
         e.preventDefault();
         $("#taskDiv").hide();
     });
 
     function appendTaskList(new_task) {
-        $(taskList).append(`<div class="alert alert-primary" role="alert">
-                    ${new_task}
+        $(taskList).append(`<div id="task" class="alert alert-primary" role="alert" data-id="${new_task.id}">
+                    ${new_task.title}
                     <button type="button" class="close float-right">
                     <span aria-hidden="true" id="taskDeleteBtn">&times;</span></button>
                 </div>`);
@@ -30,7 +32,7 @@ $(document).ready(function () {
             success: function (response) {
                 if (response["task"]) {
                     new_task = response["task"]
-                    appendTaskList(new_task.title)
+                    appendTaskList(new_task)
                 }
             },
             error: function (response) {
@@ -39,4 +41,31 @@ $(document).ready(function () {
         })
         $(formId)[0].reset()
     })
+
+    // task complete view ajax
+    $(taskList).on('click', '.alert', function (e) {
+        e.preventDefault();
+        taskId = $(this).data('id')
+        taskData = { csrfmiddlewaretoken: csrf, "taskId": taskId }
+        taskCompleteUrl = `/todo/tasks/${taskId}/completed/`
+        console.log("taskCompleteUrl", taskCompleteUrl)
+
+
+        $.ajax({
+            type: "post",
+            url: taskCompleteUrl,
+            data: taskData,
+            // dataType: "dataType",
+            success: function (response) {
+                if (response["task"]) {
+                    alert("connected")
+                }
+            },
+            error: function (response) {
+                alert("Something went wrong!")
+            }
+        });
+
+    });
+
 });

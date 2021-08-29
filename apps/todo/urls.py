@@ -6,4 +6,6 @@ app_name = 'todo'
 urlpatterns = [
     path('', views.TODOView.as_view(), name="todo_url"),
     path('tasks/', views.TODOListView.as_view(), name="task_list_url"),
+    path('tasks/<int:pk>/completed/',
+         views.TaskCompletedView.as_view(), name="task_completed_url"),
 ]

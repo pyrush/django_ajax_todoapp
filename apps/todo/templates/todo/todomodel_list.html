@@ -18,7 +18,8 @@
         </form>
         <div class="my-4" id="taskList">            
             {% for task in tasks %}
-                <div  class="alert alert-primary" role="alert">
+                <div id="task" class="alert alert-primary" role="alert" data-id="{{ task.id }}"
+                style="{% if task.is_completed %} text-decoration: line-through{% endif %}">
                     {{ task.title }}                    
                     <button type="button" class="close float-right">
                     <span aria-hidden="true" id="taskDeleteBtn">&times;</span></button>
