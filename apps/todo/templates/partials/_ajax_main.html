@@ -1,0 +1,42 @@
+$(document).ready(function () {
+    formId = $("#todoCreateForm")
+    submitBtnId = $("#submitBtn")
+    taskList = $("#taskList")
+    taskDeleteBtn = $("#taskDeleteBtn")
+
+    $(taskDeleteBtn).click(function (e) {
+        e.preventDefault();
+        $("#taskDiv").hide();
+    });
+
+    function appendTaskList(new_task) {
+        $(taskList).append(`<div class="alert alert-primary" role="alert">
+                    ${new_task}
+                    <button type="button" class="close float-right">
+                    <span aria-hidden="true" id="taskDeleteBtn">&times;</span></button>
+                </div>`);
+    }
+
+    $(submitBtnId).click(function (e) {
+        e.preventDefault()
+        serilisedData = formId.serialize()
+        url = $(formId).data('url')
+
+        $.ajax({
+            type: "post",
+            url: url,
+            data: serilisedData,
+            // dataType: "json",
+            success: function (response) {
+                if (response["task"]) {
+                    new_task = response["task"]
+                    appendTaskList(new_task.title)
+                }
+            },
+            error: function (response) {
+                alert("Something went wrong!")
+            }
+        })
+        $(formId)[0].reset()
+    })
+});
